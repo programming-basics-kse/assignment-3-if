@@ -28,10 +28,10 @@ discipline=headers.index('Event')
 name = headers.index('Name')
 year=headers.index('Year')
 
-contr_in = args.medals[0]
-year_in = args.medals[1]
 
 def valid():
+    contr_in = args.medals[0]
+    year_in = args.medals[1]
     contries = set()
     codes_contr = set()
     years = set()
@@ -51,31 +51,33 @@ res_lst=[]
 count=0
 
 def medals():
+    contr_in = args.medals[0]
+    year_in = args.medals[1]
     res_lst = []
     count = 0
+    medals = {'Gold': 0,
+              'Silver': 0,
+              'Bronze': 0}
     for line in lines:
         if count >= 10:
             break
         elif year_in == line[year] and (contr_in == line[con_code] or contr_in == line[country]):
             if contr_in == line[country]:
                 output = f"{line[name]}-{line[discipline]}-{line[medal]}"
+                if line[medal] in medals:
+                    medals[line[medal]]+=1
                 res_lst.append(output)
                 print(output)
                 count += 1
             elif contr_in == line[con_code]:
                 output = f"{line[name]}-{line[discipline]}-{line[medal]}"
+                if line[medal] in medals:
+                    medals[line[medal]]+=1
                 res_lst.append(output)
                 print(output)
                 count += 1
-    medals = {'Gold': 0,
-              'Silver': 0,
-              'Bronze': 0}
-    for s in res_lst:
-        s_lst = s.split('-')
-        if s_lst[2] in medals:
-            medals[s_lst[2]] += 1
-        elif s_lst[2] not in medals:
-            medals[s_lst[2]] = 1
+
+
 
     outcome_medals = f"Gold - {medals['Gold']}, Silver - {medals['Silver']}, Bronze - {medals['Bronze']}"
     print(outcome_medals)
@@ -90,10 +92,37 @@ def medals():
 
     if args.output:
         print('result recorded')
+total={}
+def total_func():
+    for line in lines:
+        if args.total==line[year]:
+            if line[medal]=='Gold':
+                if line[country] in total:
+                    total[line[country]]['Gold']+=1
+                elif line[country] not in total:
+                    total[line[country]] = {'Gold': 0, 'Silver': 0, 'Bronze': 0}
+                    total[line[country]]['Gold'] = 1
+            elif line[medal] == 'Silver':
+                if line[country] in total:
+                    total[line[country]]['Silver']+=1
+                elif line[country] not in total:
+                    total[line[country]] = {'Gold': 0, 'Silver': 0, 'Bronze': 0}
+                    total[line[country]]['Silver'] = 1
+            elif line[medal]=='Bronze':
+                if line[country] in total:
+                    total[line[country]]['Bronze']+=1
+                elif line[country] not in total:
+                    total[line[country]] = {'Gold': 0, 'Silver': 0, 'Bronze': 0}
+                    total[line[country]]['Bronze'] = 1
+    for i in total:
+        print(f"{i} - Gold {total[i]['Gold']} - Silver {total[i]['Silver']} - Bronze {total[i]['Bronze']}")
+
+
 
 if args.medals:
     valid()
     medals()
 
 
-
+if args.total:
+    total_func()
