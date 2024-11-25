@@ -7,6 +7,7 @@ parser.add_argument("-t","--top", help="Введіть групу серед я�
 # parser.add_argument('country',type=str, help='Введіть назву країни або її код')
 # parser.add_argument('year', type=str, help='Введіть рік проведення олімпіади')
 parser.add_argument('-o','--output', help="Введіть '-o' та назву файлу, в який хочете вивести результати")
+parser.add_argument('-overall', help="Введіть країни, щоб дізнатись рік коли кожна здобула найбільшу кількість медалейі їх кількість")
 args = parser.parse_args()
 
 
@@ -31,6 +32,8 @@ name = headers.index('Name')
 year=headers.index('Year')
 sex=headers.index('Sex')
 age=headers.index('Age')
+
+
 
 def valid():
     contr_in = args.medals[0]
@@ -193,8 +196,49 @@ def top_func():
                 for s in age_participates_m[ages[j]]:
                     print(f"У віковій категорії - {age_category} серед чоловіків топом є {s}, що здобув {age_participates_m[ages[j]][s][0]} медалей до віку {age_participates_m[ages[j]][s][1]} років ")
 
+all_countries = []
+for line in lines:
+    country_ = line[country]
+    if country_ not in all_countries:
+        all_countries.append(country_)
+# print(all_countries)
 
+def overall_func():
+    countries = args.overall.split(" ")
+    year_medals_counter = {}
 
+    for country in countries:
+        if country not in all_countries:
+            print(f"Помилка! Країна {country} не знайдена")
+            exit()
+
+        all_country_lines = []
+        # year_medals_counter = {}
+        year_medals_counter = {}
+        for line in lines:
+            if country in line:
+                all_country_lines.append(line)
+
+        for line in all_country_lines:
+            year_in_line = line[year]
+            if year_in_line in year_medals_counter:
+                year_medals_counter[year_in_line] += 1
+            else:
+                year_medals_counter[year_in_line] = 1
+        max_medal_year = 0
+        max_year = None
+        for key_year in year_medals_counter:
+            if year_medals_counter[key_year] > max_medal_year:
+                max_medal_year = year_medals_counter[key_year]
+                max_year = key_year
+
+        # print(f"{country} : {year_medals_counter}")
+        # print(f"{country} : {max(year_medals_counter)}")
+        # print(f"{country} : {max(year_medals_counter)}")
+        print(f"{country} : {max_year}")
+    # print(year_medals_counter)
+    # for key_country in year_medals_counter:
+    #     print(f"{key_country}: {max(year_medals_counter[key_country])}")
 
 
 if args.medals:
@@ -207,3 +251,6 @@ if args.total:
 
 if args.top:
     top_func()
+
+if args.overall:
+    overall_func()
