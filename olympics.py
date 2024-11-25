@@ -3,9 +3,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument('file',type=str, help='Введіть назву файлу з якого програма буде брати дані')
 parser.add_argument('-medals',nargs=2 )
 parser.add_argument('-total', help='Enter the year' )
-parser.add_argument("-t","--top", help="Введіть групу серед якої хочете дізнатись топів(M-men, F-women, 1 for 18-25 years, 2 for 25-35 years, 3 for 35-50 years, 5 for 50+ years) у форматі -- top 'M F 1 2'")
-# parser.add_argument('country',type=str, help='Введіть назву країни або її код')
-# parser.add_argument('year', type=str, help='Введіть рік проведення олімпіади')
+parser.add_argument("-top", help="Введіть групу серед якої хочете дізнатись топів(M-men, F-women, 1 for 18-25 years, 2 for 25-35 years, 3 for 35-50 years, 5 for 50+ years) у форматі -- top 'M F 1 2'")
+# parser.add_argument("-interactive", default=' ',help='Введіть назву або код країни')
 parser.add_argument('-o','--output', help="Введіть '-o' та назву файлу, в який хочете вивести результати")
 args = parser.parse_args()
 
@@ -50,6 +49,7 @@ def valid():
     if year_in not in years:
         print("Olympiad wasn't held that year")
         exit()
+
 res_lst=[]
 count=0
 total={}
@@ -193,7 +193,28 @@ def top_func():
                 for s in age_participates_m[ages[j]]:
                     print(f"У віковій категорії - {age_category} серед чоловіків топом є {s}, що здобув {age_participates_m[ages[j]][s][0]} медалей до віку {age_participates_m[ages[j]][s][1]} років ")
 
+# def interactive_func():
+#     n=0
+#     while n==0:
+#         country_or_code = input("Enter name or code of country: ")
+#         for line in lines:
+#             if country_or_code==line[country] or country_or_code==line[con_code]:
+#
 
+
+
+    # first_att_countries={}
+    # for line in lines:
+    #     # while country_or_code == line[con_code] or country_or_code == line[country]:
+    #     #     print("Country didn't partisipate in olympiade")
+    #     #     country_or_code = input("Enter RIGHT name or code of country: ")
+    #     if country_or_code==line[country]:
+    #         first_att_countries[line[country]]=line[year]
+    #     elif country_or_code==line[con_code]:
+    #         first_att_countries[line[country]] = line[year]
+    #     else:
+    #         # print("Country didn't partisipate in olympiade")
+    # print(first_att_countries)
 
 
 
@@ -207,3 +228,6 @@ if args.total:
 
 if args.top:
     top_func()
+
+# if args.interactive:
+#     interactive_func()
